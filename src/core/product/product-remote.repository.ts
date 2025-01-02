@@ -15,9 +15,6 @@ export class ProductRemoteRepository implements RepositoryInterface<CreateProduc
     console.log(process.env.NEXT_PUBLIC_HEY);
      await fetch(`${this.url}/product`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(data),
     })
       .then((response) => {
