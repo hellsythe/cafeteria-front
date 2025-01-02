@@ -5,7 +5,7 @@ import { RepositoryInterface } from "../global/repository.interface";
 import { CreateProductDto } from "./dtos/create-product.dto";
 
 @injectable()
-export class ProductRepository implements RepositoryInterface<Product> {
+export class ProductLocalRepository implements RepositoryInterface<Product> {
    constructor(@inject('UuidGenerator') private readonly uuidService: UuidGeneratorInterface) {}
 
     async create(product: CreateProductDto): Promise<string> {

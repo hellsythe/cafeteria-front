@@ -1,28 +1,34 @@
 'use client'
 import "reflect-metadata";
-import { ProductRepository } from '@/core/product/product.repository';
 import { FormEvent } from 'react'
 import { container } from "@/core/product/product.dependencies";
-import { ProductRemoteRepository } from "@/core/product/product-remote.repository";
+import { CreateProduct } from "@/core/product/usecases/create-product";
 
-export default function CreateProduct() {
+export default function CreateProductView() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const productRepository = container.resolve<ProductRepository>("ProductRepository");
-    const productRemoteRepository = container.resolve<ProductRemoteRepository>("ProductRemoteRepository");
 
+    const createProduct = container.resolve<CreateProduct>("CreateProduct");
     const formData = new FormData(event.currentTarget);
-    const value = Object.fromEntries(formData.entries());
-console.log(value);
-    const id = await productRepository.create({
-      name: formData.get('name') as string,
-      price: parseInt(formData.get('price') as string),
+    await createProduct.execute({
+            name: formData.get('name') as string,
+            price: parseInt(formData.get('price') as string),
     });
+//     const productRepository = container.resolve<ProductRepository>("ProductRepository");
+//     const productRemoteRepository = container.resolve<ProductRemoteRepository>("ProductRemoteRepository");
 
-    await productRemoteRepository.create({
-      name: formData.get('name') as string,
-      price: parseInt(formData.get('price') as string),
-    });
+//     const formData = new FormData(event.currentTarget);
+//     const value = Object.fromEntries(formData.entries());
+// console.log(value);
+//     const id = await productRepository.create({
+//       name: formData.get('name') as string,
+//       price: parseInt(formData.get('price') as string),
+//     });
+
+//     await productRemoteRepository.create({
+//       name: formData.get('name') as string,
+//       price: parseInt(formData.get('price') as string),
+//     });
   }
 
   return (
