@@ -1,0 +1,22 @@
+[
+{
+  "httpRequest" : {
+    "path" : "/some/path"
+  },
+  "httpResponse" : {
+    "body" : "some_response_body"
+  }
+},
+{
+  "httpRequest": {
+      "path": "/product",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 201,
+      "body": {
+        "message": "Response for POST /api/product"
+      }
+    }
+}
+]
