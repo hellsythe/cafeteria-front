@@ -9,8 +9,7 @@ const db = new Dexie('Database') as Dexie & {
 };
 
 db.version(1).stores({
-  products: 'id, name, price' // primary key "id" (for the runtime!)
+  products: 'id, name, price'
 });
 
-export type { Product };
 export { db };

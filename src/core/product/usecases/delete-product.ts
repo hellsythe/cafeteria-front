@@ -4,17 +4,15 @@ import { CreateProductDto } from "../dtos/create-product.dto";
 import { Product } from "../product.model";
 
 @injectable()
-export class CreateProduct {
+export class DeleteProduct {
   constructor(
     @inject('ProductLocalRepository') private readonly productLocalRepository: RepositoryInterface<Product, CreateProductDto>,
     @inject('ProductRemoteRepository') private readonly productRemoteRepository: RepositoryInterface<Product, CreateProductDto>
   ) {
   }
 
-  async execute(product: CreateProductDto): Promise<string> {
-    const id = await this.productLocalRepository.create(product);
-    await this.productRemoteRepository.create(product);
-
-    return id;
+  async execute(id: string): Promise<void> {
+    await this.productLocalRepository.delete(id);
+    // await this.productRemoteRepository.delete(id);
   }
 }

@@ -1,50 +1,63 @@
-'use client'
+"use client";
 import "reflect-metadata";
-import { FormEvent } from 'react'
+import Link from "next/link";
 import { container } from "@/core/product/product.dependencies";
-import { CreateProduct } from "@/core/product/usecases/create-product";
+import { FindProduct } from "@/core/product/usecases/find-product";
+import { useEffect, useState } from "react";
+import { Product } from "@/core/product/product.model";
+import { DeleteProduct } from "@/core/product/usecases/delete-product";
 
 export default function CreateProductView() {
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  const [data, setData] = useState(new Array<Product>());
+  const [isLoading, setLoading] = useState(true);
 
-    const createProduct = container.resolve<CreateProduct>("CreateProduct");
-    const formData = new FormData(event.currentTarget);
-    await createProduct.execute({
-            name: formData.get('name') as string,
-            price: parseInt(formData.get('price') as string),
+  useEffect(() => {
+    const findProduct = container.resolve<FindProduct>("FindProduct");
+    findProduct.execute({}).then((data) => {
+      setData(data);
+      setLoading(false);
     });
-//     const productRepository = container.resolve<ProductRepository>("ProductRepository");
-//     const productRemoteRepository = container.resolve<ProductRemoteRepository>("ProductRemoteRepository");
+  }, []);
 
-//     const formData = new FormData(event.currentTarget);
-//     const value = Object.fromEntries(formData.entries());
-// console.log(value);
-//     const id = await productRepository.create({
-//       name: formData.get('name') as string,
-//       price: parseInt(formData.get('price') as string),
-//     });
-
-//     await productRemoteRepository.create({
-//       name: formData.get('name') as string,
-//       price: parseInt(formData.get('price') as string),
-//     });
-  }
+  const deleteProduct = async (id: string) => {
+    const deleteProduct = container.resolve<DeleteProduct>("DeleteProduct");
+    await deleteProduct.execute(id);
+    setData(data.filter((product) => product.id !== id));
+  };
 
   return (
     <div className="">
-      <form onSubmit={onSubmit}>
-        <div className="flex flex-col gap-4 w-full items-center">
-        <select className="select select-bordered w-full max-w-xs">
-            <option disabled>Categoria</option>
-            <option>Comida</option>
-            <option>Bebida</option>
-        </select>
-          <input name="name" placeholder="Nombre del producto" className="input input-bordered w-full max-w-xs" />
-          <input name="price" placeholder="Precio del producto" className="input input-bordered w-full max-w-xs" />
-          <button type="submit" className="btn btn-primary">Guardar</button>
-        </div>
-      </form>
+      <Link href={"/management/products/create"} className="btn btn-primary">
+        Crear producto
+      </Link>
+
+      <div className="overflow-x-auto">
+        <table className="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((product) => (
+              <tr key={product.id}>
+                <th>{product.id}</th>
+                <td>{product.name}</td>
+                <td>{product.price}</td>
+                <td className="cap-2">
+                  <Link href={`/management/products/edit/${product.id}`} className="btn btn-primary">
+                    Editar
+                  </Link>
+                  <button className="btn btn-error" onClick={() => deleteProduct(product.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
