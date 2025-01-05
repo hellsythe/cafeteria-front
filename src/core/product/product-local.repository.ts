@@ -5,6 +5,6 @@ import { Product } from "./product.model";
 import { LocalRepository } from "../global/local.repository";
 
 @injectable()
-export class ProductLocalRepository extends LocalRepository<Product, CreateProductDto, CreateProductDto> {
+export class ProductLocalRepository extends LocalRepository<Product, CreateProductDto> {
    protected table = db.products;
 }

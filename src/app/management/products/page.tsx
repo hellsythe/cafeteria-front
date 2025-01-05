@@ -9,13 +9,13 @@ import { DeleteProduct } from "@/core/product/usecases/delete-product";
 
 export default function CreateProductView() {
   const [data, setData] = useState(new Array<Product>());
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const findProduct = container.resolve<FindProduct>("FindProduct");
     findProduct.execute({}).then((data) => {
       setData(data);
-      setLoading(false);
+      // setLoading(false);
     });
   }, []);
 

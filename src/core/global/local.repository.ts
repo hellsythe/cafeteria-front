@@ -4,12 +4,14 @@ import type { UuidGeneratorInterface } from "./services/interfaces/uuid-generato
 import { inject, injectable } from "tsyringe"
 
 @injectable()
-export class LocalRepository<Model extends { id: string }, CreateDto, UpdateDto> implements RepositoryInterface<Model, CreateDto> {
-  protected table: EntityTable<Model, 'id'>;
+export class LocalRepository<Model extends { id: string }, CreateDto> implements RepositoryInterface<Model, CreateDto> {
+  protected table: EntityTable<Model, 'id', CreateDto>;
   constructor(@inject('UuidGenerator') private readonly uuidService: UuidGeneratorInterface) { }
 
   async create(data: CreateDto): Promise<string> {
-    const id = await this.table.add({ id: this.uuidService.generate(), ...data });
+    const entity = { id: this.uuidService.generate(), ...data } as CreateDto;
+
+    const id = await this.table.add(entity);
 
     if (typeof id == 'string') {
       return id;
